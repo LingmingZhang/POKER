@@ -1,0 +1,275 @@
+/*全局设置*/
+p{
+    padding:0;
+    margin:0;
+}
+.lf{
+    float:left;
+}
+.rt{
+    float:right;
+}
+.end{
+    justify-content:flex-end;
+}
+.center{
+    margin:0 auto;
+}
+.left{
+    margin-left:20px;
+}
+.right{
+    margin-right:20px;
+}
+
+/*按钮组*/
+.current .icon{
+    width:300px;
+    height:100px;
+    position:absolute;
+}
+.icon{
+    display:none;
+}
+.icon>div{
+    display:none;
+    margin:30px auto;
+}
+.current .block{
+    display:block;
+}
+.hand{
+    width:30px;
+}
+.qiang{
+    background:url(../img/qiang.png) no-repeat;
+}
+.buqiang{
+    background:url(../img/buqiang.png) no-repeat;
+}
+.play button{
+    background:url(../img/play.png) no-repeat;
+}
+.play .btn-3{
+    background:url(../img/buchu.png) no-repeat;
+}
+.start{
+    width:88px;
+    height:34px;
+    background:url(../img/start.png) no-repeat;
+}
+/*出牌区*/
+.cards{
+    display:none;
+    width:70px;
+    height:100px;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+    position:absolute;
+}
+.cards>div{
+    position:absolute;
+    width:70px;
+    height:100px;
+}
+
+[disabled=disabled]{
+    opacity:0.5;
+    cursor:default;
+}
+.pass{
+    width:68px;
+    height:48px;
+    background:url(../img/pass.png) no-repeat;
+}
+.clock{
+    width:65px;
+    height:60px;
+    line-height:70px;
+    text-align:center;
+    background:url(../img/clock.png) no-repeat;
+}
+.buqiang-1{
+    width:65px;
+    height:35px;
+    background:url(../img/buqiang-img.png) no-repeat;
+}
+
+
+
+
+
+
+/*图片压缩*/
+img{
+    width:100%;
+}
+.img{
+    width:63px;
+    height:42px;
+
+    text-align:center;
+}
+
+
+
+
+#container{
+    width:1000px;
+    height:730px;
+    background:url(../img/background.png) repeat;
+    border:5px solid #1884C0;
+    box-shadow:0 0 5px #666;
+    margin:50px auto;
+    color:#AAE1E6;
+}
+
+/*同伴*/
+#partner{
+    height:420px;
+    position:relative;
+}
+#partner>div{
+    width:450px;
+    height:420px;
+    display:flex;
+    align-items:center;
+    text-align:center;
+}
+/*玩家信息*/
+.info{
+    width:70px;
+    text-align:center;
+}
+#main-left .info{
+    margin:20px auto;
+}
+.girl{
+    width:66px;
+    height:154px;
+    background:url(../img/girl.png) no-repeat center center;
+}
+.boy{
+    width:66px;
+    height:154px;
+    background:url(../img/boy.png) no-repeat center center;
+}
+.count{
+    width:100px;
+}
+.count .container-back{
+    width:100px;
+    height:360px;
+    position:relative;
+}
+.count .back{
+    width:65px;
+    height:326px;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+}
+.count .back>div{
+    position:absolute;
+}
+.count p{
+    text-align:center;
+    width:100px;
+    height:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+.count p span{
+    padding:0 10px;
+}
+.current{
+    width:300px;
+    height:150px;
+    position:relative;
+}
+#main-middle button:hover{
+    cursor:pointer;
+}
+
+
+/*玩家自己*/
+#main{
+    height:300px;
+    display:flex;
+    justify-content:space-between;
+}
+#main-middle{
+    width:600px;
+    text-align:center;
+}
+#main-left,#main-right{
+    width:200px;
+}
+button{
+    width:80px;
+    height:30px;
+    border:none;
+}
+
+/*放置puke*/
+#puke-container{
+    width:600px;
+    height:150px;
+    position:relative;
+}
+#puke{
+    width:358px;
+    height:100px;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    margin:auto;
+}
+#puke>div{
+    position:absolute;
+    width:70px;
+    height:100px;
+}
+.top{
+    top:-20px;
+}
+
+.opacity{
+    opacity:0;
+}
+/*不符合出牌规则*/
+.bufu{
+    background:url(../img/bufu.png) no-repeat center center;
+}
+
+/*最后三张牌*/
+#partner .lastThree{
+    position:absolute;
+    width:225px;
+    height:106px;
+    padding:5px;
+    top:5px;
+    left:380px;
+    background:rgba(32,84,128,0.8);
+    opacity:0.9;
+}
+.lastThree>div{
+    width:205px;
+    height:86px;
+    padding:10px;
+}
+.lastThree>div img{
+    width:65px;
+    height:86px;
+}
+#partner .opacity-three{
+    opacity:0;
+}

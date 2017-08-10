@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PLAYER-2</title>
+    <link rel="stylesheet" href="css/puke.css">
+</head>
+<body>
+    <div id="container">
+        <!--两侧玩家-->
+        <div id="partner">
+            <!--左侧-->
+            <div class="lf">
+                <!--玩家信息-->
+                <div class="info left">
+                    <div class="img" data-bianhao="1"></div>
+                    <div class="boy"></div>
+                    <p>play-1</p>
+                </div>
+                <!--举手、统计牌数-->
+                <div class="count left">
+                    <div class="container-back"><div class="back" data-back="1"></div></div>
+                    <p class="opacity">还剩<span data-span="1">&nbsp;17&nbsp;</span>张</p>
+                </div>
+                <!--出牌-->
+                <div class="current" data-id="1">
+                    <div class="icon block">
+                        <div class="block"><button disabled="disabled" class="start"></button></div>
+                        <div class="hand hand-1"></div>
+                        <div class="clock">20</div>
+                        <div class="pass"></div>
+                        <div class="buqiang-1"></div>
+                    </div>
+                    <div class="cards"></div>
+                </div>
+            </div>
+            <!--右侧-->
+            <div class="rt end right">
+                <!--出牌-->
+                <div class="current" data-id="3">
+                    <div class="icon block">
+                        <div class="block"><button disabled="disabled" class="start"></button></div>
+                        <div class="hand hand-3"></div>
+                        <div class="clock">20</div>
+                        <div class="pass"></div>
+                        <div class="buqiang-1"></div>
+                    </div>
+                    <div class="cards"></div>
+                </div>
+                <!--举手、统计牌数-->
+                <div class="count right">
+                    <div class="container-back"><div class="back" data-back="3"></div></div>
+                    <p class="rt opacity">还剩<span data-span="3">&nbsp;17&nbsp;</span>张</p>
+                </div>
+                <!--玩家信息-->
+                <div class="info">
+                    <div class="img" data-bianhao="3"></div>
+                    <div class="girl"></div>
+                    <p>play-3</p>
+                </div>
+            </div>
+            <!--绝对定位地主牌-->
+            <div class="lastThree opacity-three">
+                <div>
+                    <img src="img/back.png">
+                    <img src="img/back.png">
+                    <img src="img/back.png">
+                </div>
+            </div>
+        </div>
+        <!--玩家自己-->
+        <div id="main">
+            <!--左侧-->
+            <div id="main-left">
+                <div class="info">
+                    <div class="img" data-bianhao="2"></div>
+                    <div class="girl"></div>
+                    <p>本家</p>
+                </div>
+            </div>
+            <!--中间主体-->
+            <div id="main-middle">
+                <!--出牌-->
+                <div class="current center" data-id="2">
+                    <div class="icon block">
+                        <div class="block"><button class="start"></button></div>
+                        <div class="hand hand-2"></div>
+                        <div class="clock">20</div>
+                        <div class="play">
+                            <button id="btn-2"></button>
+                            <button class="btn-3"></button>
+                        </div>
+                        <div class="isGrab">
+                            <button class="qiang"></button>
+                            <button class="buqiang"></button>
+                        </div>
+                        <div class="pass"></div>
+                        <div class="buqiang-1"></div>
+                    </div>
+                    <div class="cards"></div>
+                </div>
+                <!--扑克牌-->
+                <div id="puke-container">
+                    <div id="puke"></div>
+                </div>
+            </div>
+            <!--右侧-->
+            <div id="main-right" class="center">
+
+
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-1.11.3.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/message.js"></script>
+    <script>
+        //        与服务器进行通信套接字
+        var socket = null;
+        var $start=$(".start");
+        var arr=[];
+        var brr=[];
+        var $puke=$("#puke");
+        var sarr=[];
+        var barr=[];
+        var toggle=false;
+        var aIndex=0;
+        var bIndex=0;
+        var $length=0;
+        //连接服务器---永久连接
+        socket = new WebSocket("ws://127.0.0.1:9001");
+        //接收服务器发来的消息
+        socket.onmessage = function(e){
+            var data = e.data;
+            message(data,17,34);
+        };
+
+        //单击上移
+        $puke.on("click", "div", function () {
+            $(this).toggleClass("top");
+        });
+
+        //出牌
+        $("#btn-2").click(function () {
+            //执行主体任务的开关
+            toggle=false;
+            //拿到上家出的牌 pid、保存在sarr中
+            sarr=[];
+            $("[data-id=1] .cards div").each(function(){
+                sarr.push($(this).data("pid"));
+            });
+            if($("[data-id=1] .icon").hasClass("block")){
+                sarr=[]
+            }
+            //拿到本家出的牌 pid、保存在barr中
+            barr = [];
+            $("div[class=top]").each(function () {
+                //保存出牌id
+                barr.push($(this).data("pid"));
+            });
+
+            //上家没有出牌
+            if(sarr.length==0){
+                //出单张
+                if(barr.length==1){toggle=true}else
+                //一对
+                if(barr.length==2){
+                    if(parseInt((barr[0]+1)/4)==parseInt((barr[1]+1)/4)){toggle=true}
+                }else
+                //三张
+                if(barr.length==3){
+                    if(parseInt((barr[0]+1)/4)==parseInt((barr[1]+1)/4)&&(parseInt((barr[2]+1)/4)==parseInt((barr[1]+1)/4))){
+                        toggle=true;
+                    }
+                }else
+                //四张
+                if(barr.length==4){
+                    var u=parseInt((barr[0]+1)/4);
+                    var v=parseInt((barr[1]+1)/4);
+                    var w=parseInt((barr[2]+1)/4);
+                    var x=parseInt((barr[3]+1)/4);
+                    //炸弹
+                    if(u==v&&v==w&&w==x){toggle=true}
+                    //三带一
+                    if(u==v&&v==w&&w!=x){toggle=true}
+                    if(v==x&&x==w&&w!=u){toggle=true}
+                }else
+                //出多于四张
+                if(barr.length>4) {
+                    //三带二
+                    if (barr.length == 5) {
+                        var u = parseInt((barr[0] + 1) / 4);
+                        var v = parseInt((barr[1] + 1) / 4);
+                        var w = parseInt((barr[2] + 1) / 4);
+                        var x = parseInt((barr[3] + 1) / 4);
+                        var y = parseInt((barr[4] + 1) / 4);
+                        if (u == v && v == w && x == y && w != x) {
+                            toggle = true
+                        }
+                        if (u == v && w == x && x == y && u != w) {
+                            toggle = true
+                        }
+                        if(y-x==1&&(x-w==1)&&(w-v==1)&&(v-u==1)) {
+                            toggle = true;
+                        }
+                    }
+                    //顺子
+
+                }
+                else{$("#main-right").addClass("bufu")}
+            }
+
+            //上家出一张
+            if(sarr.length==1){
+                if(barr.length==1){bigSmall(sarr[0],barr[0])}
+                if(barr.length==2){
+                    if(barr[0]==1&&barr[1]==2){toggle=true}
+                    else{toggle=false}
+                }
+            }
+
+            //上家出2张
+            if(sarr.length==2){
+                //出两张
+                if(barr.length==2){
+                    console.log(barr[0]);
+                    console.log(sarr[0]);
+                    //出两王
+                    if((barr[0]==1)&&(barr[1]==2)){toggle=true}
+                    //出一大对
+                    if(parseInt((barr[0]+1)/4)==parseInt((barr[1]+1)/4)){
+                        if(parseInt((barr[0]+1)/4)<parseInt((sarr[0]+1)/4)){toggle=true}
+                    }
+
+                }
+                //出炸弹
+                if(barr.length==4){
+                    var u=parseInt((barr[0]+1)/4);
+                    var v=parseInt((barr[1]+1)/4);
+                    var w=parseInt((barr[2]+1)/4);
+                    var x=parseInt((barr[3]+1)/4);
+                    if(u==v&&v==w&&w==x){toggle=true}
+                }
+
+            }
+
+            //上家出3张
+            if(sarr.length==3){
+                //出两张
+                if(barr.length==2){
+                    if((barr[0]==1)&&(barr[1]==2)){toggle=true}
+                }
+                //出三张
+                if(parseInt((barr[0]+1)/4)==parseInt((barr[1]+1)/4)&&(parseInt((barr[2]+1)/4)==parseInt((barr[1]+1)/4))){
+                    if(parseInt((barr[0]+1)/4)<parseInt((sarr[0]+1)/4)){toggle=true}
+                }
+                //出四张
+                if(barr.length==4){
+                    var u=parseInt((barr[0]+1)/4);
+                    var v=parseInt((barr[1]+1)/4);
+                    var w=parseInt((barr[2]+1)/4);
+                    var x=parseInt((barr[3]+1)/4);
+                    //炸弹
+                    if(u==v&&v==w&&w==x){toggle=true}
+                }
+
+            }
+
+            if(toggle==true){
+                var valArr = [];
+                $("div[class=top]").each(function () {
+                    //保存出牌id
+                    valArr.push($(this).data("pid"));
+                    //剩余牌平移
+                    $(this).nextAll().each(function () {
+                        var m = parseInt($(this).css("left")) - 18;
+                        $(this).css("left", m);
+                    });
+                    //清除选中牌
+                    $(this).remove();
+                });
+                $("[data-id=3] .clock").removeClass("block");
+                //通知其他玩家并绘图
+                var obj={marker:"play",id:2,content:valArr};
+                socket.send(JSON.stringify(obj));
+                //获得当前元素个数
+                $length=$puke.find("div").length;
+                $puke.css("width",($length-1)*18+70);
+            }else{
+                $("#main-right").addClass("bufu")
+            }
+            console.log(toggle);
+            if(toggle==true){$("#main-right").removeClass("bufu")}
+            if($("#main-middle .pass").hasClass("block")){$("#main-right").removeClass("bufu")}
+        });
+        //向服务器发送消息
+        $start.click(function () {
+            //清除开始按钮
+            $(this).remove();
+            socket.send("hand-2");
+
+        });
+
+        //不出牌
+        $("#main-middle .btn-3").click(function(){
+            var obj={marker:"pass",id:2};
+            socket.send(JSON.stringify(obj));
+        })
+
+
+
+    </script>
+</body>
+</html>
